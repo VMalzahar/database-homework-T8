@@ -14,7 +14,9 @@
 
 #### 后端
 - 不完整，待补充
-- **提交记录：** subbmit_id,code,language,code_len,status,problem_id,time,user_id
-- **问题：** problem_id,problem
-- **用户：** user_id
+- **提交记录：** **subbmit_id**, code, *language_code*, code_len, *status_code*, problem_id, time_slot, user_id
+  - 提交状态：**status_code**, status_name
+  - 语言：**language_code**, language_name
+- **问题：** **problem_id**, problem
+- **用户：** **user_id**, user_name
 
