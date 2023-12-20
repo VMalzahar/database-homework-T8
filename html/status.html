@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            /* left: 100%; */
+            padding: 50px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #user-info {
+            float: right;
+        }
+
+        .container {
+            border-radius: 8px;
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input{
+            
+            margin-left: 1%;
+            margin-right: 3%;
+            width: 25%;
+            padding: 6px;
+            margin-bottom: 10px;
+            box-sizing: border-box;   
+        }
+        button {
+        /* text-align: center; */
+            width: 10%;
+            padding: 6px;
+            background-color: #3192af;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 3%;
+            /* margin-bottom: px; */
+        }
+
+        button:hover {
+            background-color: #307fa9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #5b6ca8;
+            /* background-color: #333; */
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Status</h1>
+    <div id="user-info"></div>
+</header>
+
+<div class="container">
+    <table id="submissionTable">
+        <label for="question_id">题目ID: </label>
+        <input type="text" id="question_id" name="question_id" placeholder="例如:1000"></input>
+        <label for="username"> 用户名: </label>
+        <input type="text" id="username" name="username" ></input>
+        <button type="button" onclick="submitCode()">查询</button>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>time_slot</th>
+                <th>Problem</th>
+                <th>user</th>
+                <th>Lang</th>
+                <th>Verdict</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be populated dynamically using JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<script src="script.js">
+    document.addEventListener('DOMContentLoaded', function () 
+    {
+        // Fetch data from the backend when the page is loaded
+        fetch('/submissions')
+            .then(response => response.json())
+            .then(data => populateTable(data))
+            .catch(error => console.error('Error fetching data:', error));
+
+        function populateTable(submissions) {
+            const tableBody = document.querySelector('#submissionTable tbody');
+            submissions.forEach((submission, index) => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = index + 1;
+                row.insertCell(1).textContent = submission.problem;
+                row.insertCell(2).textContent = submission.language;
+                row.insertCell(3).textContent = submission.verdict;
+                row.insertCell(4).textContent = submission.time;
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/user')
+            .then(response => response.json())
+            .then(user => displayUserInfo(user))
+            .catch(error => console.error('Error fetching user data:', error));
+        function displayUserInfo(user) {
+        const userInfoDiv = document.getElementById('user-info');
+        userInfoDiv.textContent = `Welcome, ${user.username}!`;
+    }
+    })
+
+</script>
+
+</body>
+</html>

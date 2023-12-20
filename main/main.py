@@ -1,15 +1,21 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
- 
+import login_check
+import json
+
 host = ('localhost', 8888)
  
 class Resquest(BaseHTTPRequestHandler):
     timeout = 5
     server_version = "Apache"   #设置服务器返回的的响应头 
     state=0
-    def writef(self,flag):
+    user_name=""
+    password=""
+    login_check=login_check.Login_check()
+    def writef(self,login_flag=True):
         
-        if(flag==0):
+        if(self.user_name==""):
             self.path='/login.html'
+            self.state=0
         # if(flag==1):
         #     self.path='/submit.html'
         # print(buf)
@@ -17,6 +23,7 @@ class Resquest(BaseHTTPRequestHandler):
         # if(flag==1):
         self.send_response(200)
         self.send_header("Content-type","text/html")  #设置服务器响应头
+        if(login_flag==False):self.send_header("login_fail","")
         self.send_header('Cache-Control', 'no-store, must-revalidate')
         self.send_header('Pragma', 'no-cache')
         self.send_header('Expires', '0')
@@ -43,11 +50,16 @@ class Resquest(BaseHTTPRequestHandler):
         print(path)
         #获取post提交的数据
         datas = self.rfile.read(int(self.headers['content-length']))    #固定格式，获取表单提交的数据
+        datas= json.loads(datas)
+        if self.user_name=="":
+            self.user_name=datas["user_name"]
+            self.password=datas["password"]
+        
         #datas = urllib.unquote(datas).decode("utf-8", 'ignore')
         print(datas)
-        self.state=1
+        # self.state=1
         # self.do_GET()
-        self.writef(1)
+        self.writef(login_flag=self.login_check.check(self.user_name,self.password))
 
 
 if __name__ == '__main__':

@@ -73,8 +73,8 @@
         // 配置请求，第三个参数表示是否使用异步，默认为true
 
         var data = {
-            key1: username,
-            key2: password
+            'user_name': username,
+            'password': password
         };
 
         // 将数据转换为JSON字符串
@@ -89,7 +89,12 @@
                 },
                 body : jsonData
             })
-            .then(response => response.text())
+            .then(response => {
+                
+                if (console.log(response.headers.has('login_fail')))alert("账户或密码错误");
+                else alert("登录成功");
+                return response.text();
+            })
             .then(html => {
                 // 在这里处理从服务器返回的数据
                 // console.log(data);
