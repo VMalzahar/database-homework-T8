@@ -69,28 +69,9 @@
         var username = document.getElementById('username').value;
         var password = document.getElementById('password').value;
 
-        // Add your authentication logic here
-        // For simplicity, let's just show an alert for now
-        // alert('Username: ' + username + '\nPassword: ' + password);
-        // 创建一个新的XMLHttpRequest对象
-        var xhr = new XMLHttpRequest();
 
         // 配置请求，第三个参数表示是否使用异步，默认为true
-        xhr.open("POST", "http://localhost:8888", true);
 
-        // 设置请求头，如果有需要的话
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        // 监听请求状态的变化
-        xhr.onreadystatechange = function () {
-        // 请求完成，并且成功返回
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            // 处理响应数据
-            console.log(xhr.responseText);
-        }
-        };
-
-        // 准备发送的数据
         var data = {
             key1: username,
             key2: password
@@ -99,9 +80,27 @@
         // 将数据转换为JSON字符串
         var jsonData = JSON.stringify(data);
 
-        // 发送请求
-        xhr.send(jsonData);
-            
+
+        fetch('http://localhost:8888/submit.html', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 可以根据需要添加其他请求头
+                },
+                body : jsonData
+            })
+            .then(response => response.text())
+            .then(html => {
+                // 在这里处理从服务器返回的数据
+                // console.log(data);
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
     }
 </script>
 
