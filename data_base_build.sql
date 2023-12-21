@@ -25,7 +25,7 @@ CREATE TABLE `language`  (
   `language_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `language_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`language_id`) USING HASH,
-  UNIQUE INDEX `name`(`language_name`) USING HASH
+  UNIQUE INDEX `name`(`language_name` ASC) USING BTREE
 ) AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -58,13 +58,14 @@ INSERT INTO `problems` VALUES (1, NULL);
 DROP TABLE IF EXISTS `record`;
 CREATE TABLE `record`  (
   `submit_id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `time_slot` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `problem_id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `code` blob NULL,
   `language_id` int UNSIGNED NOT NULL,
   `status_id` int UNSIGNED NOT NULL DEFAULT 1,
   `code_len` int UNSIGNED NULL DEFAULT NULL,
-  `problem_id` int UNSIGNED NOT NULL,
-  `time_slot` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_id` int UNSIGNED NOT NULL,
+  `time` float UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`submit_id`) USING HASH,
   INDEX `language`(`language_id`) USING HASH,
   INDEX `status`(`status_id`) USING HASH,
@@ -107,6 +108,8 @@ CREATE TABLE `user`  (
   `user_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
   `user_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `grant` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`user_id`) USING HASH,
   UNIQUE INDEX `user_code`(`user_code`) USING HASH,
   INDEX `name`(`user_name` ASC) USING BTREE
@@ -115,7 +118,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, '', 'coder_1');
+INSERT INTO `user` VALUES (1, '', 'coder_1','123456',FALSE);
 
 -- ----------------------------
 -- Triggers structure for table record
