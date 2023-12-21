@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submission Records</title>
+    <title>Code</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,18 +17,13 @@
             padding: 50px;
             background-color: #4CAF50;
             color: #fff;
-            /* text-align: center; */
+            text-align: center;
             padding: 10px;
 
         }
-        h1 
-        {
-
-            text-align: center;
-        }
 
         #user-info {
-            margin-left: 80%;
+            margin-left: 60%;
         }
 
         .container {
@@ -41,6 +36,7 @@
         }
 
         input{
+            
             margin-left: 1%;
             margin-right: 3%;
             width: 25%;
@@ -48,19 +44,8 @@
             margin-bottom: 10px;
             box-sizing: border-box;   
         }
-        #submit
-        {
-            background-color: #4CAF50;
-            margin-left: 10%;
-            margin-top: 10px;
-            width: 20%;
-        }
-        #submit:hover {
-            background-color: #307fa9;
-        }
         button {
         /* text-align: center; */
-            /* margin-top: 10px; */
             width: 10%;
             padding: 6px;
             background-color: #3192af;
@@ -73,6 +58,16 @@
         }
 
         button:hover {
+            background-color: #307fa9;
+        }
+        #submit
+        {
+            background-color: #4CAF50;
+            margin-left: 10%;
+            margin-top: 10px;
+            width: 20%;
+        }
+        #submit:hover {
             background-color: #307fa9;
         }
 
@@ -100,29 +95,38 @@
             border: 1px solid #5b6ca8;
             color: #5b6ca8;
         }
+        
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            overflow: auto;
+            margin-left: auto;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            
+            color: #5b6ca8;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Status</h1>
-        
+        <h1>Code</h1>
         <div id="user-info"></div>
     </header>
-
     <button id="submit" type="button" onclick="submit()">Submit</button>
     <button id="submit" type="button" onclick="status()">status</button>
     <button id="submit" type="button" onclick="logout()">logout</button>
-
 <div class="container">
     <table id="submissionTable">
-        <label for="question_id">题目ID: </label>
+        <!-- <label for="question_id">题目ID: </label>
         <input type="text" id="question_id" name="question_id" placeholder="例如:1000"></input>
         <label for="username"> 用户名: </label>
-        <input type="text" id="username" name="username" ></input>
-        <button type="button" onclick="submitCode()">查询</button>
+        <input type="text" id="username" name="username" ></input> -->
+        <!-- <button type="button" onclick="submitCode()">查询</button> -->
         <thead>
             <tr>
-                <th>#</th>
+                <!-- <th>#</th> -->
                 <th>time_slot</th>
                 <th>Problem</th>
                 <th>user</th>
@@ -132,31 +136,28 @@
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <!-- <th>#</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th> -->
+            </tr>
             <!-- Table rows will be populated dynamically using JavaScript -->
         </tbody>
     </table>
+    <pre>
+        <code>
+        </code>
+    </pre>
+    
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () 
     {
-        // Fetch data from the backend when the page is loaded
-        fetch('/submissions')
-            .then(response => response.json())
-            .then(data => populateTable(data))
-            .catch(error => console.error('Error fetching data:', error));
-
-        function populateTable(submissions) {
-            const tableBody = document.querySelector('#submissionTable tbody');
-            submissions.forEach((submission, index) => {
-                const row = tableBody.insertRow();
-                row.insertCell(0).textContent = index + 1;
-                row.insertCell(1).textContent = submission.problem;
-                row.insertCell(2).textContent = submission.language;
-                row.insertCell(3).textContent = submission.verdict;
-                row.insertCell(4).textContent = submission.time;
-            });
-        }
         fetch('/user')
             .then(response => {
                 const userInfoDiv = document.getElementById('user-info');
@@ -164,8 +165,18 @@
                 userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
                 return response.text();
             })
-        
+            const tableBody = document.querySelector('#submissionTable tbody');
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = "2023/12/1";
+                row.insertCell(1).textContent = "Problem";
+                row.insertCell(2).textContent = "user";
+                row.insertCell(3).textContent = "Lang";
+                row.insertCell(4).textContent = "Verdict";
+                row.insertCell(5).textContent = "Time";
     });
+    // document.addEventListener('DOMContentLoaded', function () {
+        
+    // })
     function submit()
     {
       fetch('/submit.html', {
@@ -224,7 +235,6 @@
                 console.error('Error:', error);
             });
     }
-
 
 </script>
 

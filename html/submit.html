@@ -27,7 +27,16 @@
     h1 {
       text-align: center;
     }
-
+    #submit
+        {
+            background-color: #4CAF50;
+            margin-left: 10%;
+            margin-top: 10px;
+            width: 20%;
+        }
+        #submit:hover {
+            background-color: #307fa9;
+        }
     #user-info {
         margin-left: 60%;
     }
@@ -89,6 +98,10 @@
         <div id="user-info"></div>
         <!-- </body> -->
     </header>
+    <button id="submit" type="button" onclick="submit()">Submit</button>
+    <button id="submit" type="button" onclick="status()">status</button>
+    <button id="submit" type="button" onclick="logout()">logout</button>
+
   <!-- <h1>Code Submission</h1> -->
 
   <form id="codeForm">
@@ -150,6 +163,64 @@
                 return response.text();
             })
     })
+    function submit()
+    {
+      fetch('/submit.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    function status()
+    {
+      fetch('/status.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    function logout()
+    {
+      fetch('/login.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+            .then(response => response.text())
+            .then(html => {
+                alert("已登出");
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
   </script>
 
 </body>

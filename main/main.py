@@ -41,6 +41,8 @@ class Resquest(BaseHTTPRequestHandler):
         
         global username,state
         path = self.path
+        if(path=="/login.html"):
+            username=""
         if(path=="/user"):
             self.send_response(200)
             self.send_header("Content-type","text/html")
@@ -65,7 +67,7 @@ class Resquest(BaseHTTPRequestHandler):
             password=datas["password"]
         
         #datas = urllib.unquote(datas).decode("utf-8", 'ignore')
-        print(datas)
+        # print(datas)
         # self.state=1
         # self.do_GET()
         self.writef(login_flag=login.check(username,password))
