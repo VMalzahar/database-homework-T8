@@ -1,22 +1,23 @@
-import pymysql
-class USER:
-    pass
+import MySQLdb
+import MySQLdb.cursors as cors
 
+# 进行数据库连接内容设置，返回测试连接成功与否
+def DB_set(connection:str = "localhost",dbuser:str,password:str,database:str)->bool:
+    pass
+# 用户登录，登陆失败则返回None
+def USER_login(self,user:str,password:str)->DB:
+    pass
 
 # self.lang 为 {id:name} 如 {1:'C++',2:'Rust',3:'Python'}
 # self.status 为 {id:name} 如 {1:'Pending',2:'Wrong Answer',3:'RunningTimeError'}
-class DataBase:
-    pass
-
-# 数据库登录至管理员账号，登陆失败则返回None
-def DB_login(dbuser:str,password:str)->DataBase:
-    return None
-
-# 用户登录，登陆失败则返回None
-def USER_login(self,db:DataBase,user:str,password:str)->USER:
-    pass
-
-class USER:
+class DB:
+    # 修改，只有管理员账户能够成功
+    # alter_column 为修改项目，参考class record中非`*_name`项
+    # alter_record 为具体修改，支持多个记录同时修改，格式为 [(submit_id,alter), (submit_id,alter), ...]
+    def alter(self,
+              alter_column:str,
+              alter_record:list[(int,)])->bool:
+        pass
     # 提交，返回提交成功与否
     def submit(self,lang_id:int,code:str)->bool:
         pass
