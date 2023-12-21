@@ -13,15 +13,23 @@
         color: #fff;
         text-align: center;
         padding: 10px;
+        /* display: flex; */
+        /* justify-content: space-between;
+        align-items: center; */
     
     }
+
+    /* .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    } */
     h1 {
       text-align: center;
     }
 
-    #user-info 
-    {
-        float: right;
+    #user-info {
+        margin-left: 60%;
     }
 
     body {
@@ -135,13 +143,12 @@
     }
     document.addEventListener('DOMContentLoaded', function () {
         fetch('/user')
-            .then(response => response.json())
-            .then(user => displayUserInfo(user))
-            .catch(error => console.error('Error fetching user data:', error));
-        function displayUserInfo(user) {
-        const userInfoDiv = document.getElementById('user-info');
-        userInfoDiv.textContent = `Welcome, ${user.username}!`;
-    }
+            .then(response => {
+                const userInfoDiv = document.getElementById('user-info');
+                
+                userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
+                return response.text();
+            })
     })
   </script>
 

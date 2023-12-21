@@ -4,22 +4,22 @@ import json
 
 host = ('localhost', 8888)
  
+username=""
+password=""
+login=login_check.Login_check()    
+state=0
 class Resquest(BaseHTTPRequestHandler):
     timeout = 5
     server_version = "Apache"   #设置服务器返回的的响应头 
-    state=0
-    user_name=""
-    password=""
-    login_check=login_check.Login_check()
     def writef(self,login_flag=True):
-        
-        if(self.user_name==""):
+        global username,state
+        if(username==""):
             self.path='/login.html'
             self.state=0
         # if(flag==1):
         #     self.path='/submit.html'
         # print(buf)
-        self.state=0
+        # self.state=0
         # if(flag==1):
         self.send_response(200)
         self.send_header("Content-type","text/html")  #设置服务器响应头
@@ -39,27 +39,36 @@ class Resquest(BaseHTTPRequestHandler):
 
     def do_GET(self):
         
+        global username,state
         path = self.path
+        if(path=="/user"):
+            self.send_response(200)
+            self.send_header("Content-type","text/html")
+            self.send_header("username",username)
+            self.end_headers()
+            return
         print(path)
-        self.writef(self.state)
+        self.writef()
         # print(self.state)
          #里面需要传入二进制数据，用encode()函数转换为二进制数据   #设置响应body，即前端页面要展示的数据
  
     def do_POST(self):
+        
+        global username,state
         path = self.path
         print(path)
         #获取post提交的数据
         datas = self.rfile.read(int(self.headers['content-length']))    #固定格式，获取表单提交的数据
         datas= json.loads(datas)
-        if self.user_name=="":
-            self.user_name=datas["user_name"]
-            self.password=datas["password"]
+        if username=="":
+            username=datas["user_name"]
+            password=datas["password"]
         
         #datas = urllib.unquote(datas).decode("utf-8", 'ignore')
         print(datas)
         # self.state=1
         # self.do_GET()
-        self.writef(login_flag=self.login_check.check(self.user_name,self.password))
+        self.writef(login_flag=login.check(username,password))
 
 
 if __name__ == '__main__':

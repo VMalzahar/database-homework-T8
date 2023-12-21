@@ -133,13 +133,12 @@
     });
     document.addEventListener('DOMContentLoaded', function () {
         fetch('/user')
-            .then(response => response.json())
-            .then(user => displayUserInfo(user))
-            .catch(error => console.error('Error fetching user data:', error));
-        function displayUserInfo(user) {
-        const userInfoDiv = document.getElementById('user-info');
-        userInfoDiv.textContent = `Welcome, ${user.username}!`;
-    }
+            .then(response => {
+                const userInfoDiv = document.getElementById('user-info');
+                
+                userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
+                return response.text();
+            })
     })
 
 </script>
