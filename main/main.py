@@ -19,8 +19,9 @@ class Resquest(BaseHTTPRequestHandler):
     def writef(self,login_flag=2):
         global username,password,state,dbconn
         if(login_flag==1):
-            self.path="/submit.html"
             dbconn=dbconnect.USER_login(username,password)
+            print("try connect",dbconn)
+            self.path="/submit.html"
         if(login_flag==0):
             self.path="/login.html"
             username==""
@@ -34,7 +35,10 @@ class Resquest(BaseHTTPRequestHandler):
         # if(flag==1):
         self.send_response(200)
         self.send_header("Content-type","text/html")  #设置服务器响应头
-        if(login_flag==0):self.send_header("login_fail","")
+        print("login_flag=",login_flag)
+        if login_flag==0:
+            print("sent")
+            self.send_header("login_fail","")
         self.send_header('Cache-Control', 'no-store, must-revalidate')
         self.send_header('Pragma', 'no-cache')
         self.send_header('Expires', '0')
@@ -76,7 +80,7 @@ class Resquest(BaseHTTPRequestHandler):
  
     def do_POST(self):
         
-        global username,state,dbconn
+        global username,password,state,dbconn
         path = self.path
         print(path)
         #获取post提交的数据
@@ -129,6 +133,7 @@ class Resquest(BaseHTTPRequestHandler):
             self.writef()
             pass
         if(path=='/submitCode'):
+            print("before submit ",dbconn)
             submitCode(dbconn,username,datas["Language"],datas["Code"],datas["question_id"])
             self.path='/status.html'
             self.writef()
