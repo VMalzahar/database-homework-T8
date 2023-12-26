@@ -55,6 +55,9 @@ class Resquest(BaseHTTPRequestHandler):
         
         global username,state,dbconn
         path = self.path
+        if(path=='/'):
+            if(username!=''):
+                self.path='/status.html'
         if(path=="/login.html"):
             username=""
         if(path=="/user"):
