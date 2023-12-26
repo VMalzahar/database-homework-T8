@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Submission</title>
   <style>
-
-    header 
-    {
-        padding: 50px;
-        background-color: #4CAF50;
-        color: #fff;
-        text-align: center;
-        padding: 10px;
-        /* display: flex; */
-        /* justify-content: space-between;
+    header {
+      padding: 50px;
+      background-color: #4CAF50;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      /* display: flex; */
+      /* justify-content: space-between;
         align-items: center; */
-    
+
     }
 
     /* .container {
@@ -27,35 +26,41 @@
     h1 {
       text-align: center;
     }
-    #submit
-        {
-            background-color: #4CAF50;
-            margin-left: 10%;
-            margin-top: 10px;
-            width: 20%;
-        }
-        #submit:hover {
-            background-color: #307fa9;
-        }
+
+    #submit {
+      background-color: #4CAF50;
+      margin-left: 10%;
+      margin-top: 10px;
+      width: 20%;
+    }
+
+    #submit:hover {
+      background-color: #307fa9;
+    }
+
     #user-info {
-        margin-left: 60%;
+      margin-left: 60%;
     }
 
     body {
-        
-        background-color: #4CAF50;
+
+      background-color: #4CAF50;
     }
+
     body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
 
     form {
-      padding: 50px; /* 添加内边距 */
-      border: 1px solid #ddd; /* 添加边框，增加可读性 */
-      border-radius: 8px; /* 圆角边框 */
+      padding: 50px;
+      /* 添加内边距 */
+      border: 1px solid #ddd;
+      /* 添加边框，增加可读性 */
+      border-radius: 8px;
+      /* 圆角边框 */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -65,17 +70,19 @@
       display: block;
       margin-bottom: 5px;
     }
-    
-    select, textarea, input{
+
+    select,
+    textarea,
+    input {
       width: 100%;
       padding: 12px;
       margin-bottom: 10px;
       box-sizing: border-box;
-      
+
     }
 
     button {
-        /* text-align: center; */
+      /* text-align: center; */
       width: 40%;
       padding: 10px;
       background-color: #3192af;
@@ -90,17 +97,18 @@
     }
   </style>
 </head>
+
 <body>
-    <header>
-        <h1>Submit</h1>
-        <!-- <textarea> -->
-        <!-- <body> -->
-        <div id="user-info"></div>
-        <!-- </body> -->
-    </header>
-    <button id="submit" type="button" onclick="submit()">Submit</button>
-    <button id="submit" type="button" onclick="status()">status</button>
-    <button id="submit" type="button" onclick="logout()">logout</button>
+  <header>
+    <h1>Submit</h1>
+    <!-- <textarea> -->
+    <!-- <body> -->
+    <div id="user-info"></div>
+    <!-- </body> -->
+  </header>
+  <button id="submit" type="button" onclick="submit()">Submit</button>
+  <button id="submit" type="button" onclick="status()">Status</button>
+  <button id="submit" type="button" onclick="logout()">Logout</button>
 
   <!-- <h1>Code Submission</h1> -->
 
@@ -139,89 +147,96 @@
       alert('Code submitted!'); // For demonstration purposes
       var selectedLanguage = document.getElementById('language').value;
 
-    // 获取输入的代码
-    var userCode = document.getElementById('code').value;
-
-    // 获取选项
-    var option1 = document.getElementById('option1').checked;
-    var option2 = document.getElementById('option2').checked;
-    // 添加更多选项的获取逻辑
-
-    // 在实际应用中，你可以将这些值发送到服务器进行处理
-    // 这里只是为了演示，显示获取的值
-    alert('Selected Language: ' + selectedLanguage +
-        '\nUser Code: ' + userCode +
-        '\nOption 1: ' + option1 +
-        '\nOption 2: ' + option2);
+      // 获取输入的代码
+      var userCode = document.getElementById('code').value;
+      // alert('Selected Language: ' + selectedLanguage +
+      //   '\nUser Code: ' + userCode +
+      //   '\nOption 1: ' + option1 +
+      //   '\nOption 2: ' + option2);
+      fetch('/submitCode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonData
+      })
+        .then(response => response.text())
+        .then(html => {
+          alert("提交成功");
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/user')
-            .then(response => {
-                const userInfoDiv = document.getElementById('user-info');
-                
-                userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
-                return response.text();
-            })
+      fetch('/user')
+        .then(response => {
+          const userInfoDiv = document.getElementById('user-info');
+
+          userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
+          return response.text();
+        })
     })
-    function submit()
-    {
+    function submit() {
       fetch('/submit.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body : jsonData
+      })
+        .then(response => response.text())
+        .then(html => {
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
-    function status()
-    {
+    function status() {
       fetch('/status.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body : jsonData
+      })
+        .then(response => response.text())
+        .then(html => {
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
-    function logout()
-    {
+    function logout() {
       fetch('/login.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                alert("已登出");
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body : jsonData
+      })
+        .then(response => response.text())
+        .then(html => {
+          alert("已登出");
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
   </script>
 
 </body>
+
 </html>
