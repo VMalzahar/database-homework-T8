@@ -4,5 +4,8 @@ from typing import Dict
 class Login_check():
     def __init__(self) -> None:
         pass
-    def check(self,username,password) -> bool:
-        return dbconnect.USER_login(username,password) is not None
+    def check(self,username,password) -> int:
+        if dbconnect.USER_login(username,password) is not None:
+            return 1
+        else:
+            return 0

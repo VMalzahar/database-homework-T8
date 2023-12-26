@@ -34,7 +34,7 @@ class Resquest(BaseHTTPRequestHandler):
         # if(flag==1):
         self.send_response(200)
         self.send_header("Content-type","text/html")  #设置服务器响应头
-        if(login_flag==False):self.send_header("login_fail","")
+        if(login_flag==0):self.send_header("login_fail","")
         self.send_header('Cache-Control', 'no-store, must-revalidate')
         self.send_header('Pragma', 'no-cache')
         self.send_header('Expires', '0')

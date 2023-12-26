@@ -9,7 +9,7 @@ def get_status(dbconn,id=[],problem_id=[] ,user_name=[]):
                      "time_slot":datetime.fromtimestamp(r.time_slot).strframe("%Y-%m-%d %H:%M:%S"),
                      "user":r.user_name,
                      "id":r.submit_id}
-    dbconn.select_record(submit_ids=id,problem_id=problem_ids,user_ids=user_name)
+    dbconn.select_record(submit_ids=id,problem_ids=problem_id,user_ids=user_name)
     return list(map(r2d,dbconn.fetchall()))
 
 def deletesubmition(dbconn,id:int):
