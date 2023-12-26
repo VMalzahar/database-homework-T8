@@ -51,6 +51,7 @@ CREATE TABLE `problems`  (
 -- Records of problems
 -- ----------------------------
 INSERT INTO `problems` VALUES (1, NULL);
+INSERT INTO `problems` VALUES (2, NULL);
 
 -- ----------------------------
 -- Table structure for record
@@ -118,7 +119,8 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, '', 'coder_1','123456',FALSE);
+INSERT INTO `user` VALUES (1, 'c1', 'coder_1','123456',FALSE);
+INSERT INTO `user` VALUES (2, 'c2', 'coder_2','654321',FALSE);
 
 -- ----------------------------
 -- Triggers structure for table record
