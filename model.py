@@ -1,3 +1,6 @@
+# 需要 pip install mysqlclient
+# 在 dbconnect.py 的末尾有测试及演示
+
 import MySQLdb
 import MySQLdb.cursors as cors
 
@@ -10,7 +13,7 @@ def USER_login(user:str,password:str)->DB:
     pass
 
 # 返回的记录类型
-class record:
+class reccls:
     submit_id=0
     # time_slot 返回小数
     # 可用 datetime.datetime.fromtimestamp(time_slot) 获得时间戳
@@ -45,8 +48,8 @@ class DB:
               update_column:str,
               update_record:list[(any,int)])->bool:
         pass
-    # 提交，返回提交成功与否
-    def submit(self,problem_id:int,lang_id:int,code:str)->bool:
+    # 提交，返回提交成功的 submit_id ，若提交失败则返回 None
+    def submit(self,problem_id:int,lang_id:int,code:str)->int:
         pass
 
     # 按要求选择提交记录，返回成功与否
@@ -62,8 +65,8 @@ class DB:
     # 获取所有提交记录
     def fetchall(self)->list[record]:
         pass
-    # 获取从 x 开始 num 条提交记录
-    def fetchmany(self,x:int = 1,num:int = 100)->list[record]:
+    # 获取从满足条件的第 x 开始 num 条提交记录（x从0开始算）
+    def fetchmany(self,x:int = 0,num:int = 100)->list[record]:
         pass
 
     # 获取提交记录的代码

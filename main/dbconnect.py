@@ -1,3 +1,5 @@
+# 需要 pip install mysqlclient
+
 import MySQLdb
 import MySQLdb.cursors as cors
 from operator import itemgetter as iget
@@ -25,6 +27,7 @@ class reccls:
         self.time=0
         # 提交代码，若权限不足则为 None
         self.code=None
+
         (self.submit_id,self.time_slot,
          self.problem_id,
          self.user_id,self.user_name,
@@ -122,9 +125,12 @@ class DB:
     def update(self,
               update_column:str,
               update_record:list[(any,int)])->bool:
+        if self.grant==0:
+            return False
         tmpc=self.conn.cursor()
         try:
-            sql="UPDATE record SET {}=%s WHERE submit_id=%d".format(update_column)
+            sql="UPDATE record SET `{}`=%s WHERE submit_id=%s".format(update_column)
+            c=update_record[0]
             tmpc.executemany(sql,update_record)
             self.conn.commit()
             succ=True
@@ -137,10 +143,10 @@ class DB:
     def submit(self,problem_id:int,lang_id:int,code:str)->int:
         tmpc=self.conn.cursor()
         try:
-            sql="INSERT INTO record(user_id,problem_id,language_id,`code`) VALUES (%d,%d,%d,0x%s)"
-            tmpc.execute(sql,
+            sql="INSERT INTO record(user_id,problem_id,language_id,`code`) VALUES (%s,%s,%s,%s)"
+            tmpc.execute(sql%
                          (self.user_id,problem_id,lang_id,
-                          code.encode("utf-8").hex()))
+                          "0x"+code.encode("utf-8").hex()))
             sql="SELECT LAST_INSERT_ID()"
             tmpc.execute(sql)
             self.conn.commit()
@@ -178,7 +184,7 @@ class DB:
             view_condition = lambda st,ls: st+" IN ("+",".join(map(str,ls))+")" if ls else "TRUE"
             condition = " AND ".join(
                     [view_condition("submit_id",submit_ids),
-                     view_condition("record.user_id",user_ids),
+                     view_condition("user_id",user_ids),
                      view_condition("status_id",status_ids),
                      view_condition("problem_id",problem_ids),
                      view_condition("language_id",language_ids),
@@ -189,10 +195,8 @@ WHERE {}
 ORDER BY time_slot DESC, submit_id DESC""".format(
         self.getview(),condition)
             tmpc.execute(sql)
-            self.conn.commit()
             succ=True
         except:
-            self.conn.rollback()
             succ=False
         tmpc.close()
         return succ
@@ -240,13 +244,43 @@ def USER_login(user:str,password:str)->DB:
 
 
 if __name__=="__main__":
-    if not DB_set("root","","final"): # 设置数据库管理员
-        print("set error")
-    else:
-        user=USER_login("coder_1","123456") # 登录用户
+    dbuser="root"
+    password=""
+    database="final"
+    if DB_set(dbuser,password,database): # 设置数据库管理员
+        user="coder_2"
+        password="654321"
+        user=USER_login(user,password) # 登录用户
         print("user_id=",user.user_id," user_name=",user.user_name)
+    else:
+        print("set error")
+        exit()
     
-    print("select",user.select_record(language_ids=[2,4]))
-    s=user.fetchall()
+    print("grant",user.grant)
+
+    # 提交代码
+    problem_id=1
+    language_id=2
+    code="""haawh
+awdn'"_+`123awdoof"""
+    sid=user.submit(problem_id,language_id,code)
+    language_id=3
+    sid=user.submit(problem_id,language_id,code)
+    # 如果有权限则可以更新
+    user.grant=1 
+    flag=user.update("language_id",[(4,sid),(1,sid-1)]) # 批量更新
+    print("update sid(",sid,")",flag)
+ 
+    # 选择满足特定条件的数据
+    flag=user.select_record(
+            submit_ids=range(2,sid+2),
+            language_ids=[2,4])
+    print("select",flag)
+    s=user.fetchmany(0,3) # 取数据，取从0开始3个
     for rec in s:
-        print("submit_id=",rec.submit_id,rec.language_name)
+        print("\n>>> submit_id=",rec.submit_id,"user_name=",rec.user_name)
+        print("---------------",rec.language_name)
+        print(rec.code)
+        print("+++++++++++++++")
+
+
