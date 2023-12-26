@@ -89,7 +89,7 @@
             })
             .then(response => {
                 
-                if (console.log(response.headers.has('login_fail')))alert("账户或密码错误");
+                if (response.headers.has('login_fail'))alert("账户或密码错误");
                 else alert("登录成功");
                 return response.text();
             })

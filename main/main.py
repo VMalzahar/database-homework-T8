@@ -20,11 +20,10 @@ class Resquest(BaseHTTPRequestHandler):
         global username,password,state,dbconn
         if(login_flag==1):
             dbconn=dbconnect.USER_login(username,password)
-            print("try connect",dbconn)
             self.path="/submit.html"
         if(login_flag==0):
             self.path="/login.html"
-            username==""
+            username=""
         if(username==""):
             self.path='/login.html'
             self.state=0
@@ -133,7 +132,6 @@ class Resquest(BaseHTTPRequestHandler):
             self.writef()
             pass
         if(path=='/submitCode'):
-            print("before submit ",dbconn)
             submitCode(dbconn,username,datas["Language"],datas["Code"],datas["question_id"])
             self.path='/status.html'
             self.writef()
