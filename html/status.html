@@ -221,6 +221,7 @@
             var problem_id = document.getElementById('question_id').value;
             var username = document.getElementById('username').value;
             var data = {
+                'id': 0,
                 'username': username,
                 'problem_id': problem_id
             };
@@ -234,6 +235,7 @@
                 body: jsonData
             })
                 .then(response => {
+                    // console.log(response)
                     var table = document.getElementById("submissionTable");
 
                     // 移除表格中的所有行
@@ -252,16 +254,48 @@
             const tableBody = document.querySelector('tbody');
             submissions.forEach((submission, index) => {
                 const row = tableBody.insertRow();
-                row.insertCell(0).textContent = index + 1;
+                ceil1 = row.insertCell(0);
+
+                ceil1.textContent = submission.id;
+                ceil1.style.color = "#66CCFF"
+                ceil1.addEventListener("click", function () {
+                    cellClickHandler(submission.id);
+                });
                 row.insertCell(1).textContent = submission.time_slot;
                 row.insertCell(2).textContent = submission.problem;
                 row.insertCell(3).textContent = submission.user;
                 row.insertCell(4).textContent = submission.language;
                 row.insertCell(5).textContent = submission.verdict;
                 row.insertCell(6).textContent = submission.time;
+
             });
         }
-
+        function cellClickHandler(id) {
+            // alert(id);
+            data = {
+                "id": id
+                // 'username': "",
+                // 'problem_id': 0
+            };
+            var jsonData = JSON.stringify(data);
+            fetch('/find', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    // alert("已登出");
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     </script>
 
 </body>

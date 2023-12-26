@@ -122,7 +122,7 @@
     </select>
 
     <label for="question_id">题目ID:</label>
-    <input type="text" id="question_id" name="question_id" placeholder="例如:1000"></input>
+    <input type="text" id="question_id" name="question_id" placeholder="例如:1000" required></input>
 
     <label for="code">代码提交:</label>
     <textarea id="code" name="code" rows="30" placeholder="Enter your code here..."></textarea>
@@ -145,10 +145,21 @@
       // You can use JavaScript to get the selected language, code, and options
       // Send the data to the server or perform any other actions as needed
       alert('Code submitted!'); // For demonstration purposes
-      var selectedLanguage = document.getElementById('language').value;
-
+      var Language = document.getElementById('language').value;
+      var selectElement = document.getElementById('language');
+      var selectedIndex = selectElement.selectedIndex;
+      var selectedOption = selectElement.options[selectedIndex];
+      var language = selectedOption.value
       // 获取输入的代码
-      var userCode = document.getElementById('code').value;
+      var Code = document.getElementById('code').value;
+      var question_id = document.getElementById('question_id').value;
+      var data = {
+            'question_id': question_id,
+            'Language': Language,
+            'Code':Code
+        };
+      
+        var jsonData = JSON.stringify(data);
       // alert('Selected Language: ' + selectedLanguage +
       //   '\nUser Code: ' + userCode +
       //   '\nOption 1: ' + option1 +
@@ -162,7 +173,7 @@
       })
         .then(response => response.text())
         .then(html => {
-          alert("提交成功");
+          // alert("提交成功");
           document.open();
           document.write(html);
           document.close();

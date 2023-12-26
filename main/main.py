@@ -76,7 +76,7 @@ class Resquest(BaseHTTPRequestHandler):
         #获取post提交的数据
         datas = self.rfile.read(int(self.headers['content-length']))    #固定格式，获取表单提交的数据
         datas= json.loads(datas)
-        
+        print(datas)
         if(path== "/login"):
             # self.path=
             if username=="":
@@ -84,7 +84,50 @@ class Resquest(BaseHTTPRequestHandler):
                 password=datas["password"]
             self.writef(login_flag=login.check(username,password))
         if(path== "/search"):
+            self.send_response(200)
+            self.send_header("Content-type","text/json")
+            self.end_headers()
+            data=get_status(id=datas["id"],problem_id=datas["problem_id"],user_name=datas['username']) 
+            data=json.dumps(data)
+            self.wfile.write(bytes(data, 'utf-8'))
+            return
             pass
+        if(path== "/find"):
+            self.send_response(200)
+            self.send_header("Content-type","text/html")
+            self.end_headers()
+            if username=="admin":
+                self.path="/code_admin.html"
+            else:
+                self.path="/code_normal.html"
+            with open('html'+self.path, 'r', encoding='utf-8') as html1:
+                buf=html1.read()
+            ### 插入code
+            buf=buf.replace("'id': 0,","'id': "+str(datas["id"])+",")
+            buf=buf.replace("deletesubmition(id)","deletesubmition("+str(datas["id"])+")")
+            buf=buf.replace("Changesubmition(id)","Changesubmition("+str(datas["id"])+")")
+            buf=buf.replace("<code></code>","<code>\n"+findcode(datas["id"])+"\n</code>")
+
+            ###
+            self.wfile.write(bytes(buf, 'utf-8'))
+            print(buf)
+        if(path=='/change'):
+            Changesubmition(datas["id"],datas["new_status"])
+            self.path='/status.html'
+            self.writef()
+            pass
+        if(path=='/delete'):
+
+            deletesubmition(datas["id"])
+            self.path='/status.html'
+            self.writef()
+            pass
+        if(path=='/submitCode'):
+            submitCode(username,datas["Language"],datas["Code"],datas["question_id"])
+            self.path='/status.html'
+            self.writef()
+            pass
+
         #datas = urllib.unquote(datas).decode("utf-8", 'ignore')
         # print(datas)
         # self.state=1

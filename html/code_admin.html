@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,17 +36,18 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        input{
-            
+        input {
+
             margin-left: 1%;
             margin-right: 3%;
             width: 25%;
             padding: 6px;
             margin-bottom: 10px;
-            box-sizing: border-box;   
+            box-sizing: border-box;
         }
+
         button {
-        /* text-align: center; */
+            /* text-align: center; */
             width: 20%;
             padding: 6px;
             background-color: #de2121;
@@ -60,13 +62,14 @@
         button:hover {
             background-color: #307fa9;
         }
-        #submit
-        {
+
+        #submit {
             background-color: #4CAF50;
             margin-left: 10%;
             margin-top: 10px;
             width: 20%;
         }
+
         #submit:hover {
             background-color: #307fa9;
         }
@@ -78,61 +81,60 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             /* border: 1px solid #ddd; */
             padding: 8px;
             text-align: left;
         }
-        thead{
-            
+
+        thead {
+
             /* border: 1px solid #ddd; */
             border: 1px solid #5b6ca8;
             background-color: #5b6ca8;
             color: #fff;
         }
 
-        tbody{
-            
+        tbody {
+
             border: 1px solid #5b6ca8;
             color: #5b6ca8;
         }
-        
+
         pre {
             background-color: #f4f4f4;
             padding: 10px;
             overflow: auto;
             margin-left: auto;
         }
+
         code {
             font-family: "Courier New", Courier, monospace;
-            
+
             color: #5b6ca8;
         }
 
-        #change
-        {
+        #change {
             background-color: #4CAF50;
         }
 
-        #change:hover
-        {
+        #change:hover {
             background-color: #8a4615;
         }
 
-        #language
-        {
+        #language {
             margin-left: 2%;
-            color:#3ca475;
+            color: #3ca475;
         }
 
-        select
-        {
-            color:#3ca475;
+        select {
+            color: #3ca475;
             border: 1px solid #078416;
         }
-
     </style>
 </head>
+
 <body>
     <header>
         <h1>Code</h1>
@@ -142,195 +144,234 @@
     <button id="submit" type="button" onclick="status()">Status</button>
     <button id="submit" type="button" onclick="logout()">Logout</button>
 
-<div class="container">
-    <table id="submissionTable">
-        <!-- <label for="question_id">题目ID: </label>
+    <div class="container">
+        <table id="submissionTable">
+            <!-- <label for="question_id">题目ID: </label>
         <input type="text" id="question_id" name="question_id" placeholder="例如:1000"></input>
         <label for="username"> 用户名: </label>
         <input type="text" id="username" name="username" ></input> -->
-        <!-- <button type="button" onclick="submitCode()">查询</button> -->
-        <thead>
-            <tr>
-                <th id="#id">#</th>
-                <th>time_slot</th>
-                <th>Problem</th>
-                <th>user</th>
-                <th>Lang</th>
-                <th>Verdict</th>
-                <th>Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <!-- <th>#</th>
+            <!-- <button type="button" onclick="submitCode()">查询</button> -->
+            <thead>
+                <tr>
+                    <th >#</th>
+                    <th>time_slot</th>
+                    <th>Problem</th>
+                    <th>user</th>
+                    <th>Lang</th>
+                    <th>Verdict</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <!-- <th>#</th>
                 <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
                 <th></th> -->
-            </tr>
-            <!-- Table rows will be populated dynamically using JavaScript -->
-        </tbody>
-    </table>
-    <pre>
-        <code>
-        </code>
+                </tr>
+                <!-- Table rows will be populated dynamically using JavaScript -->
+            </tbody>
+        </table>
+        <pre>
+        <code></code>
     </pre>
-    <button type="button" id=""onclick="deletesubmition()">删除记录</button>
-    <label id="language">修改结果:</label>
-    <select id="new_status" name="language">
-      <option value="AC">Accept</option>
-      <option value="WA">Wrong Answer</option>
-      <option value="TLE">Time Limit Error</option>
-      <option value="MLE">Memory Limit Error</option>
-      <option value="RE">Runtime Error</option>
+        <button type="button" id="" onclick="deletesubmition(id)">删除记录</button>
+        <label >修改结果:</label>
+        <select id="new_status" name="language">
+            <option value="AC">Accept</option>
+            <option value="WA">Wrong Answer</option>
+            <option value="TLE">Time Limit Error</option>
+            <option value="MLE">Memory Limit Error</option>
+            <option value="RE">Runtime Error</option>
 
-      <!-- Add more language options as needed -->
-    </select>
-    <button type="button" id="change"onclick="Changesubmition()">修改记录</button>
-</div>
+            <!-- Add more language options as needed -->
+        </select>
+        <button type="button" id="change" onclick="Changesubmition(id)">修改记录</button>
+    </div>
 
-<script>
-    function deletesubmition()
-    {
-        var id = document.getElementById('#id');
-        fetch('/delete', {
+    <script>
+        function deletesubmition( id ) {
+            // var id = document.getElementById('#id');
+            data = {
+                "id": id
+            };
+            var jsonData = JSON.stringify(data);
+            fetch('/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'delete_id':id
                 },
-                // body : jsonData
+                body : jsonData
             })
-            .then(response => response.text())
-            .then(html => {
-                // 在这里处理从服务器返回的数据
-                // console.log(data);
-                
-                alert("删除成功");
-                document.open();
-                document.write(html);
-                document.close();
+                .then(response => response.text())
+                .then(html => {
+                    // 在这里处理从服务器返回的数据
+                    // console.log(data);
+
+                    alert("删除成功");
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function Changesubmition( id ) {
+
+            var selectElement = document.getElementById('new_status');
+            var selectedIndex = selectElement.selectedIndex;
+            var selectedOption = selectElement.options[selectedIndex];
+            var new_status=selectedOption.value
+            data = {
+                "id": id,
+                'new_status': new_status
+            };
+            var jsonData = JSON.stringify(data);
+            // var id = document.getElementById('#id');
+            fetch('/change', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body : jsonData
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
+                .then(response => response.text())
+                .then(html => {
+                    // 在这里处理从服务器返回的数据
+                    // console.log(data);
+                    alert("修改成功");
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
 
-    function Changesubmition()
-    {
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/user')
+                .then(response => {
+                    const userInfoDiv = document.getElementById('user-info');
 
-        var new_status=new_statusdocument.getElementById('new_status');
-        var id = document.getElementById('#id');
-        fetch('/change', {
+                    userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
+                    return response.text();
+                })
+            var data = {
+                'id': 0,
+                'username': "",
+                'problem_id': 0
+            };
+
+            var jsonData = JSON.stringify(data);
+            fetch('/search', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'change_id':id,
-                    'new_status':new_status
                 },
-                // body : jsonData
+                body: jsonData
             })
-            .then(response => response.text())
-            .then(html => {
-                // 在这里处理从服务器返回的数据
-                // console.log(data);
-                alert("修改成功");
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => {
+                    // console.log(response)
+                    var table = document.getElementById("submissionTable");
 
-    }
-    document.addEventListener('DOMContentLoaded', function () 
-    {
-        fetch('/user')
-            .then(response => {
-                const userInfoDiv = document.getElementById('user-info');
-                
-                userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
-                return response.text();
-            })
-            const tableBody = document.querySelector('#submissionTable tbody');
+                    // 移除表格中的所有行
+                    var rowCount = table.rows.length;
+                    for (var i = rowCount - 1; i > 0; i--) {
+                        table.deleteRow(i);
+                    }
+                    return response.json()
+                })
+                .then(data => populateTable(data))
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        function populateTable(submissions) {
+            const tableBody = document.querySelector('tbody');
+            submissions.forEach((submission, index) => {
                 const row = tableBody.insertRow();
-                
-                row.insertCell(0).textContent = "#id";
-                row.insertCell(1).textContent = "time_slot";
-                row.insertCell(2).textContent = "Problem";
-                row.insertCell(3).textContent = "user";
-                row.insertCell(4).textContent = "Lang";
-                row.insertCell(5).textContent = "Verdict";
-                row.insertCell(6).textContent = "Time";
-    });
+                ceil1 = row.insertCell(0);
 
-    
-    // document.addEventListener('DOMContentLoaded', function () {
-        
-    // })
-    function submit()
-    {
-      fetch('/submit.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-    function status()
-    {
-      fetch('/status.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-    function logout()
-    {
-      fetch('/login.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                alert("已登出");
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
+                ceil1.textContent = submission.id;
+                ceil1.style.color = "#66CCFF"
+                // ceil1.addEventListener("click", function () {
+                //     cellClickHandler(submission.id);
+                // });
+                row.insertCell(1).textContent = submission.time_slot;
+                row.insertCell(2).textContent = submission.problem;
+                row.insertCell(3).textContent = submission.user;
+                row.insertCell(4).textContent = submission.language;
+                row.insertCell(5).textContent = submission.verdict;
+                row.insertCell(6).textContent = submission.time;
 
-</script>
+            });
+        }
+
+        function submit() {
+            fetch('/submit.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function status() {
+            fetch('/status.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function logout() {
+            fetch('/login.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    alert("已登出");
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>
 
 </body>
+
 </html>
