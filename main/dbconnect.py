@@ -191,10 +191,11 @@ class DB:
             )->bool:
         tmpc=self.conn.cursor()
         try:
-            view_condition = lambda st,ls: st+" IN ("+",".join(map(str,ls))+")" if ls else "TRUE"
+            view_condition = lambda st,ls,j="": st+" IN ("+j+(j+","+j).join(map(str,ls))+j+")" if ls!=[] else "TRUE"
             condition = " AND ".join(
                     [view_condition("submit_id",submit_ids),
-                     view_condition("user_id",user_ids),
+                     #view_condition("user_id",user_ids),
+                     view_condition("user_name",user_ids,"'"),
                      view_condition("status_id",status_ids),
                      view_condition("problem_id",problem_ids),
                      view_condition("language_id",language_ids),
@@ -204,9 +205,11 @@ SELECT * FROM record NATURAL JOIN `user`
 WHERE {}
 ORDER BY time_slot DESC, submit_id DESC""".format(
         self.getview(),condition)
+            print("select",sql)
             tmpc.execute(sql)
             succ=True
-        except:
+        except Exception as err:
+            print("error",err)
             succ=False
         tmpc.close()
         return succ
@@ -220,6 +223,7 @@ ORDER BY time_slot DESC, submit_id DESC""".format(
         except:
             lst=[]
         tmpc.close()
+        print(lst)
         return lst
 
     # 获取从 x 开始 num 条提交记录
@@ -240,8 +244,8 @@ ORDER BY time_slot DESC, submit_id DESC""".format(
         tmpc=self.conn.cursor()
         code="None or no access to."
         try:
-            sql="SELECT * FROM record WHERE submit_id=%d"
-            tmpc.execute(sql,(submit_id))
+            sql="SELECT * FROM record WHERE submit_id=%s"
+            tmpc.execute(sql%(submit_id))
             lst=tmpc.fetchall()
             if len(lst)==1 and (
                     self.grant!=0 or self.user_id==lst[0]["user_id"]):

@@ -66,7 +66,7 @@ CREATE TABLE `record`  (
   `language_id` int UNSIGNED NOT NULL,
   `status_id` int UNSIGNED NOT NULL DEFAULT 1,
   `code_len` int UNSIGNED NULL DEFAULT NULL,
-  `time` float UNSIGNED NULL DEFAULT NULL,
+  `time` float UNSIGNED NULL DEFAULT 0,
   PRIMARY KEY (`submit_id`) USING HASH,
   INDEX `language`(`language_id`) USING HASH,
   INDEX `status`(`status_id`) USING HASH,
@@ -116,12 +116,13 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`user_id`) USING HASH,
   UNIQUE INDEX `user_code`(`user_code`) USING HASH,
   INDEX `name`(`user_name` ASC) USING BTREE
-) AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'c1', 'coder_1','123456',FALSE);
+INSERT INTO `user` VALUES (1, 'c1', 'coder_1','123456',TRUE);
+INSERT INTO `user` VALUES (3, 'admin', 'admin','123456',TRUE);
 INSERT INTO `user` VALUES (2, 'c2', 'coder_2','654321',FALSE);
 
 -- ----------------------------

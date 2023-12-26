@@ -34,9 +34,7 @@ class Resquest(BaseHTTPRequestHandler):
         # if(flag==1):
         self.send_response(200)
         self.send_header("Content-type","text/html")  #设置服务器响应头
-        print("login_flag=",login_flag)
         if login_flag==0:
-            print("sent")
             self.send_header("login_fail","")
         self.send_header('Cache-Control', 'no-store, must-revalidate')
         self.send_header('Pragma', 'no-cache')
@@ -99,7 +97,7 @@ class Resquest(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type","text/json")
             self.end_headers()
-            data=get_status(id=datas["id"],problem_id=datas["problem_id"],user_name=datas['username']) 
+            data=get_status(dbconn,id=datas["id"],problem_id=datas["problem_id"],user_name=datas['username']) 
             data=json.dumps(data)
             self.wfile.write(bytes(data, 'utf-8'))
             return
