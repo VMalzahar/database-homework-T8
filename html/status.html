@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,8 +22,8 @@
             padding: 10px;
 
         }
-        h1 
-        {
+
+        h1 {
 
             text-align: center;
         }
@@ -40,26 +41,28 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        input{
+        input {
             margin-left: 1%;
             margin-right: 3%;
             width: 25%;
             padding: 6px;
             margin-bottom: 10px;
-            box-sizing: border-box;   
+            box-sizing: border-box;
         }
-        #submit
-        {
+
+        #submit {
             background-color: #4CAF50;
             margin-left: 10%;
             margin-top: 10px;
             width: 20%;
         }
+
         #submit:hover {
             background-color: #307fa9;
         }
+
         button {
-        /* text-align: center; */
+            /* text-align: center; */
             /* margin-top: 10px; */
             width: 10%;
             padding: 6px;
@@ -82,151 +85,185 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             /* border: 1px solid #ddd; */
             padding: 8px;
             text-align: left;
         }
-        thead{
-            
+
+        thead {
+
             /* border: 1px solid #ddd; */
             border: 1px solid #5b6ca8;
             background-color: #5b6ca8;
             color: #fff;
         }
 
-        tbody{
-            
+        tbody {
+
             border: 1px solid #5b6ca8;
             color: #5b6ca8;
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Status</h1>
-        
+
         <div id="user-info"></div>
     </header>
 
     <button id="submit" type="button" onclick="submit()">Submit</button>
-    <button id="submit" type="button" onclick="status()">status</button>
-    <button id="submit" type="button" onclick="logout()">logout</button>
+    <button id="submit" type="button" onclick="status()">Status</button>
+    <button id="submit" type="button" onclick="logout()">Logout</button>
 
-<div class="container">
-    <table id="submissionTable">
-        <label for="question_id">题目ID: </label>
-        <input type="text" id="question_id" name="question_id" placeholder="例如:1000"></input>
-        <label for="username"> 用户名: </label>
-        <input type="text" id="username" name="username" ></input>
-        <button type="button" onclick="submitCode()">查询</button>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>time_slot</th>
-                <th>Problem</th>
-                <th>user</th>
-                <th>Lang</th>
-                <th>Verdict</th>
-                <th>Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Table rows will be populated dynamically using JavaScript -->
-        </tbody>
-    </table>
-</div>
+    <div class="container">
+        <table id="submissionTable">
+            <label for="question_id">题目ID: </label>
+            <input type="text" id="question_id" name="question_id" placeholder="例如:1000"></input>
+            <label for="username"> 用户名: </label>
+            <input type="text" id="username" name="username"></input>
+            <button type="button" onclick="search()">查询</button>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>time_slot</th>
+                    <th>Problem</th>
+                    <th>user</th>
+                    <th>Lang</th>
+                    <th>Verdict</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be populated dynamically using JavaScript -->
+            </tbody>
+        </table>
+    </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () 
-    {
-        // Fetch data from the backend when the page is loaded
-        fetch('/submissions')
-            .then(response => response.json())
-            .then(data => populateTable(data))
-            .catch(error => console.error('Error fetching data:', error));
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch data from the backend when the page is loaded
+            fetch('/submissions')
+                .then(response => response.json())
+                .then(data => populateTable(data))
+                .catch(error => console.error('Error fetching data:', error));
 
+
+            fetch('/user')
+                .then(response => {
+                    const userInfoDiv = document.getElementById('user-info');
+
+                    userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
+                    return response.text();
+                })
+
+        });
+        function submit() {
+            fetch('/submit.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function status() {
+            fetch('/status.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function logout() {
+            fetch('/login.html', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body : jsonData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    alert("已登出");
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function search() {
+
+            var problem_id = document.getElementById('question_id').value;
+            var username = document.getElementById('username').value;
+            var data = {
+                'username': username,
+                'problem_id': problem_id
+            };
+
+            var jsonData = JSON.stringify(data);
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonData
+            })
+                .then(response => {
+                    var table = document.getElementById("submissionTable");
+
+                    // 移除表格中的所有行
+                    var rowCount = table.rows.length;
+                    for (var i = rowCount - 1; i > 0; i--) {
+                        table.deleteRow(i);
+                    }
+                    return response.json()
+                })
+                .then(data => populateTable(data))
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
         function populateTable(submissions) {
-            const tableBody = document.querySelector('#submissionTable tbody');
+            const tableBody = document.querySelector('tbody');
             submissions.forEach((submission, index) => {
                 const row = tableBody.insertRow();
                 row.insertCell(0).textContent = index + 1;
-                row.insertCell(1).textContent = submission.problem;
-                row.insertCell(2).textContent = submission.language;
-                row.insertCell(3).textContent = submission.verdict;
-                row.insertCell(4).textContent = submission.time;
+                row.insertCell(1).textContent = submission.time_slot;
+                row.insertCell(2).textContent = submission.problem;
+                row.insertCell(3).textContent = submission.user;
+                row.insertCell(4).textContent = submission.language;
+                row.insertCell(5).textContent = submission.verdict;
+                row.insertCell(6).textContent = submission.time;
             });
         }
-        fetch('/user')
-            .then(response => {
-                const userInfoDiv = document.getElementById('user-info');
-                
-                userInfoDiv.textContent = `Welcome, ${response.headers.get("username")}!`;
-                return response.text();
-            })
-        
-    });
-    function submit()
-    {
-      fetch('/submit.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-    function status()
-    {
-      fetch('/status.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-    function logout()
-    {
-      fetch('/login.html', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // body : jsonData
-            })
-            .then(response => response.text())
-            .then(html => {
-                alert("已登出");
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
 
-
-</script>
+    </script>
 
 </body>
+
 </html>

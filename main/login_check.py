@@ -6,3 +6,5 @@ class Login_check():
     def check(self,username,password) -> bool:
         if username=="admin" and password=="123456":
             return 1
+        else:
+            return 0
