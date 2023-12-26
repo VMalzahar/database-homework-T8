@@ -45,13 +45,13 @@ CREATE TABLE `problems`  (
   `problem_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `problem` blob NULL,
   PRIMARY KEY (`problem_id`) USING HASH
-) AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) AUTO_INCREMENT = 1002 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of problems
 -- ----------------------------
-INSERT INTO `problems` VALUES (1, NULL);
-INSERT INTO `problems` VALUES (2, NULL);
+INSERT INTO `problems` VALUES (1001, NULL);
+INSERT INTO `problems` VALUES (1002, NULL);
 
 -- ----------------------------
 -- Table structure for record
@@ -99,7 +99,9 @@ CREATE TABLE `status`  (
 INSERT INTO `status` VALUES (1, 'Pending');
 INSERT INTO `status` VALUES (2, 'Accepted');
 INSERT INTO `status` VALUES (3, 'Wrong Answer');
-INSERT INTO `status` VALUES (4, 'Time Limit Exceeded');
+INSERT INTO `status` VALUES (4, 'Time Limit Error');
+INSERT INTO `status` VALUES (5, 'Memory Limit Error');
+INSERT INTO `status` VALUES (6, 'Runtime Error');
 
 -- ----------------------------
 -- Table structure for user

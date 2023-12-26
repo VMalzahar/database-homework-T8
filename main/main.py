@@ -2,19 +2,25 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import login_check
 import json
 from getdata import *
+import dbconnect
 
+if not dbconnect.DB_set("root","","final"):
+    raise Exception("cannot connect to database.")
 host = ('localhost', 8888)
+
 username=""
 password=""
 login=login_check.Login_check()    
+dbconn=None
 state=0
 class Resquest(BaseHTTPRequestHandler):
     timeout = 5
     server_version = "Apache"   #设置服务器返回的的响应头 
     def writef(self,login_flag=2):
-        global username,state
+        global username,password,state,dbconn
         if(login_flag==1):
             self.path="/submit.html"
+            dbconn=dbconnect.USER_login(username,password)
         if(login_flag==0):
             self.path="/login.html"
             username==""
@@ -44,7 +50,7 @@ class Resquest(BaseHTTPRequestHandler):
 
     def do_GET(self):
         
-        global username,state
+        global username,state,dbconn
         path = self.path
         if(path=="/login.html"):
             username=""
@@ -58,7 +64,7 @@ class Resquest(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type","text/json")
             self.end_headers()
-            data=get_status()
+            data=get_status(dbconn)
             data=json.dumps(data)
             self.wfile.write(bytes(data, 'utf-8'))
             return
@@ -70,7 +76,7 @@ class Resquest(BaseHTTPRequestHandler):
  
     def do_POST(self):
         
-        global username,state
+        global username,state,dbconn
         path = self.path
         print(path)
         #获取post提交的数据
@@ -106,24 +112,24 @@ class Resquest(BaseHTTPRequestHandler):
             buf=buf.replace("'id': 0,","'id': "+str(datas["id"])+",")
             buf=buf.replace("deletesubmition(id)","deletesubmition("+str(datas["id"])+")")
             buf=buf.replace("Changesubmition(id)","Changesubmition("+str(datas["id"])+")")
-            buf=buf.replace("<code></code>","<code>\n"+findcode(datas["id"])+"\n</code>")
+            buf=buf.replace("<code></code>","<code>\n"+findcode(dbconn,datas["id"])+"\n</code>")
 
             ###
             self.wfile.write(bytes(buf, 'utf-8'))
             print(buf)
         if(path=='/change'):
-            Changesubmition(datas["id"],datas["new_status"])
+            Changesubmition(dbconn,datas["id"],datas["new_status"])
             self.path='/status.html'
             self.writef()
             pass
         if(path=='/delete'):
 
-            deletesubmition(datas["id"])
+            deletesubmition(dbconn,datas["id"])
             self.path='/status.html'
             self.writef()
             pass
         if(path=='/submitCode'):
-            submitCode(username,datas["Language"],datas["Code"],datas["question_id"])
+            submitCode(dbconn,username,datas["Language"],datas["Code"],datas["question_id"])
             self.path='/status.html'
             self.writef()
             pass

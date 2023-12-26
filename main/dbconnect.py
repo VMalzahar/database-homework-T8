@@ -25,8 +25,6 @@ class reccls:
         self.status_name=''
         self.code_len=0
         self.time=0
-        # 提交代码，若权限不足则为 None
-        self.code=None
 
         (self.submit_id,self.time_slot,
          self.problem_id,
@@ -34,14 +32,13 @@ class reccls:
          self.language_id,
          self.status_id,
          self.code_len,self.time,
-         self.code)=iget(
+         )=iget(
              "submit_id","time_slot",
              "problem_id",
              "user_id","user_name",
              "language_id",
              "status_id",
              "code_len","time",
-             "code"
              )(rec)
         self.time_slot=self.time_slot.timestamp()
 
@@ -139,6 +136,20 @@ class DB:
             succ=False
         tmpc.close()
         return succ
+    def delete(self,submit_ids:list[int])->bool:
+        if self.grant==0:
+            return False
+        tmpc=self.conn.cursor()
+        try:
+            sql="DELETE FROM record WHERE submit_id in (%s)"
+            tmpc.execute(sql,",".join(map(str,submit_ids)))
+            self.conn.commit()
+            succ=True
+        except:
+            self.conn.rollback()
+            succ=False
+        tmpc.close()
+        return succ
     # 提交，返回提交成功的 submit_id ，若提交失败则返回 None
     def submit(self,problem_id:int,lang_id:int,code:str)->int:
         tmpc=self.conn.cursor()
@@ -165,7 +176,6 @@ class DB:
          r.status_name)=(
                 self.lang[r.language_id],
                 self.status[r.status_id])
-        r.code = None if self.grant==0 and self.user_id!=r.user_id else r.code.decode("utf-8")
         return r
 
     def getview(self):
@@ -227,7 +237,19 @@ ORDER BY time_slot DESC, submit_id DESC""".format(
 
     # 获取提交记录的代码
     def fetch_code(self,submit_id:int)->str:
-        pass
+        tmpc=self.conn.cursor()
+        code="None or no access to."
+        try:
+            sql="SELECT * FROM record WHERE submit_id=%d"
+            tmpc.execute(sql,(submit_id))
+            lst=tmpc.fetchall()
+            if len(lst)==1 and (
+                    self.grant!=0 or self.user_id==lst[0]["user_id"]):
+                code=lst[0]["code"].decode("utf-8")
+        except:
+            pass
+        tmpc.close()
+        return code
 
     # 获取题面
     def fetch_problem(self,problem_id:int)->bytes:
