@@ -205,7 +205,6 @@ SELECT * FROM record NATURAL JOIN `user`
 WHERE {}
 ORDER BY time_slot DESC, submit_id DESC""".format(
         self.getview(),condition)
-            print("select",sql)
             tmpc.execute(sql)
             succ=True
         except Exception as err:

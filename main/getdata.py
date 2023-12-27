@@ -5,14 +5,12 @@ def get_status(dbconn,id=0,problem_id="" ,user_name=""):
     r2d = lambda r: {"problem":r.problem_id,
                      "language":r.language_name,
                      "verdict":r.status_name,
-                     "time":str(r.time)+"ms" if r.time else "",
+                     "time":str(r.time)+"ms",
                      "time_slot":datetime.fromtimestamp(r.time_slot).strftime("%Y-%m-%d %H:%M:%S"),
                      "user":r.user_name,
                      "id":r.submit_id}
     id = [] if id==0 else [id]
-    print("id=",problem_id)
-    problem_id = [] if problem_id=="" else [problem_id]
-    print("<id=",problem_id)
+    problem_id = [] if problem_id=="" or problem_id==0 else [problem_id]
     user_name = [] if user_name=="" else [user_name]
     dbconn.select_record(submit_ids=id,problem_ids=problem_id,user_ids=user_name)
     return list(map(r2d,dbconn.fetchall()))
