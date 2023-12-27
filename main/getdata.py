@@ -1,14 +1,19 @@
 from datetime import datetime
 
-def get_status(dbconn,id=[],problem_id=[] ,user_name=[]):
+def get_status(dbconn,id=0,problem_id="" ,user_name=""):
     # res=[{"problem":"problem1","language":"C++","verdict":"accept","time":"300ms","time_slot":"2023/12/25","user":"Frieren","id":"1"}]
-    r2d = lambda r: {"problem":str(r.problem_id),
+    r2d = lambda r: {"problem":r.problem_id,
                      "language":r.language_name,
                      "verdict":r.status_name,
-                     "time":str(r.time)+"ms",
-                     "time_slot":datetime.fromtimestamp(r.time_slot).strframe("%Y-%m-%d %H:%M:%S"),
+                     "time":str(r.time)+"ms" if r.time else "",
+                     "time_slot":datetime.fromtimestamp(r.time_slot).strftime("%Y-%m-%d %H:%M:%S"),
                      "user":r.user_name,
                      "id":r.submit_id}
+    id = [] if id==0 else [id]
+    print("id=",problem_id)
+    problem_id = [] if problem_id=="" else [problem_id]
+    print("<id=",problem_id)
+    user_name = [] if user_name=="" else [user_name]
     dbconn.select_record(submit_ids=id,problem_ids=problem_id,user_ids=user_name)
     return list(map(r2d,dbconn.fetchall()))
 
@@ -16,20 +21,12 @@ def deletesubmition(dbconn,id:int):
     dbconn.delete([id])
 
 def Changesubmition(dbconn,id:int,status:str):
-    if status=="AC":
-        status_id=2
-    elif status=="WA":
-        status_id=3
-    elif status=="TLE":
-        status_id=4
-    elif status=="MLE":
-        status_id=5
-    elif status=="RE":
-        status_id=6
-    dbconn.update("status_id",[(status_id,id)])
+    s2id={"AC":2,"WA":3,"TLE":4,"MLE":5,"RE":6}
+    dbconn.update("status_id",[(s2id[status],id)])
 
 def findcode(dbconn,id:int) -> str:
-    return dbconn.fetchcode(id)
+    return dbconn.fetch_code(id)
 
 def submitCode(dbconn,user:str,lang:str,code:str,question_id:int):
-    dbconn.submit(question_id,lang,code)
+    l2id={"cpp":2,"java":4,"python":3}
+    dbconn.submit(question_id,l2id[lang],code)
