@@ -135,3 +135,4 @@ CREATE TRIGGER `insert` BEFORE INSERT ON `record` FOR EACH ROW SET NEW.code_len=
 delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
+

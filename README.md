@@ -13,7 +13,10 @@
 - 代码展示页面
 
 #### 后端
-- 不完整，待补充
+需要 `pip install mysqlclient`
+
+需要 mysql 导入 `data_base_build.sql` 建立数据库
+
 - **提交记录：** **subbmit_id**[bigint unsigned], code[blob], *language_code*, code_len[int unsigned], *status_code*, *problem_id*, time_slot[timestamp], *user_id*
   - 提交状态：**status_code**[smallint unsigned], status_name[tinytext]
   - 语言：**language_code**[int unsigned], language_name[tinytext]
