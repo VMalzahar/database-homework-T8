@@ -141,10 +141,8 @@
 
   <script>
     function submitCode() {
-      // Add your code submission logic here
-      // You can use JavaScript to get the selected language, code, and options
-      // Send the data to the server or perform any other actions as needed
-      alert('Code submitted!'); // For demonstration purposes
+      // 提交函数
+      alert('Code submitted!'); 
       var Language = document.getElementById('language').value;
       var selectElement = document.getElementById('language');
       var selectedIndex = selectElement.selectedIndex;
@@ -153,6 +151,7 @@
       // 获取输入的代码
       var Code = document.getElementById('code').value;
       var question_id = document.getElementById('question_id').value;
+      
       var data = {
             'question_id': question_id,
             'Language': Language,
@@ -160,10 +159,6 @@
         };
       
         var jsonData = JSON.stringify(data);
-      // alert('Selected Language: ' + selectedLanguage +
-      //   '\nUser Code: ' + userCode +
-      //   '\nOption 1: ' + option1 +
-      //   '\nOption 2: ' + option2);
       fetch('/submitCode', {
         method: 'POST',
         headers: {

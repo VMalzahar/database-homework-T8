@@ -16,7 +16,7 @@ state=0
 class Resquest(BaseHTTPRequestHandler):
     timeout = 5
     server_version = "Apache"   #设置服务器返回的的响应头 
-    def writef(self,login_flag=2):
+    def writef(self,login_flag=2): #根据路径向客户端发送对应的html
         global username,password,state,dbconn
         if(login_flag==1):
             dbconn=dbconnect.USER_login(username,password)
@@ -27,11 +27,6 @@ class Resquest(BaseHTTPRequestHandler):
         if(username==""):
             self.path='/login.html'
             self.state=0
-        # if(flag==1):
-        #     self.path='/submit.html'
-        # print(buf)
-        # self.state=0
-        # if(flag==1):
         self.send_response(200)
         self.send_header("Content-type","text/html")  #设置服务器响应头
         if login_flag==0:
@@ -42,14 +37,10 @@ class Resquest(BaseHTTPRequestHandler):
         self.end_headers()
         with open('html'+self.path, 'r', encoding='utf-8') as html1:
             buf=html1.read()
-        # print(buf)
-            # self.state=1
-        # print("TT",buf)
         self.wfile.write(bytes(buf, 'utf-8'))
-        # self.wfile.write(buf.encode()) 
 
 
-    def do_GET(self):
+    def do_GET(self): #处理HTTP GET请求，不同路径对应不同的处理
         
         global username,state,dbconn
         path = self.path
@@ -75,10 +66,8 @@ class Resquest(BaseHTTPRequestHandler):
 
         print(path)
         self.writef()
-        # print(self.state)
-         #里面需要传入二进制数据，用encode()函数转换为二进制数据   #设置响应body，即前端页面要展示的数据
  
-    def do_POST(self):
+    def do_POST(self):#处理HTTP POST请求，不同路径对应不同的处理
         
         global username,password,state,dbconn
         path = self.path
@@ -88,7 +77,6 @@ class Resquest(BaseHTTPRequestHandler):
         datas= json.loads(datas)
         print(datas)
         if(path== "/login"):
-            # self.path=
             if username=="":
                 username=datas["user_name"]
                 password=datas["password"]
@@ -138,14 +126,10 @@ class Resquest(BaseHTTPRequestHandler):
             self.writef()
             pass
 
-        #datas = urllib.unquote(datas).decode("utf-8", 'ignore')
-        # print(datas)
-        # self.state=1
-        # self.do_GET()
         
 
-
 if __name__ == '__main__':
+    #启动服务器
     server = HTTPServer(host, Resquest)
     print("Starting server, listen at: %s:%s" % host)
     server.serve_forever()

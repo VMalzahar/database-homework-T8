@@ -83,18 +83,16 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                    // 可以根据需要添加其他请求头
                 },
                 body : jsonData
             })
             .then(response => {
-                
+                // 判断是否登录成功，没有登录成功后端会发送对应的请求头
                 if (response.headers.has('login_fail'))alert("账户或密码错误");
                 else alert("登录成功");
                 return response.text();
             })
             .then(html => {
-                // 在这里处理从服务器返回的数据
                 // console.log(data);
                 document.open();
                 document.write(html);

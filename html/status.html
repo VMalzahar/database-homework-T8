@@ -145,7 +145,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Fetch data from the backend when the page is loaded
+            //这是添加一个加载数据的函数，用来填充提交记录表以及用户名
             fetch('/submissions')
                 .then(response => response.json())
                 .then(data => populateTable(data))
@@ -251,6 +251,7 @@
                 });
         }
         function populateTable(submissions) {
+            //这个是填充表格的具体信息函数
             const tableBody = document.querySelector('tbody');
             submissions.forEach((submission, index) => {
                 const row = tableBody.insertRow();
